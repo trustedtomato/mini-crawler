@@ -4,7 +4,9 @@
   "description": "A really small crawler.",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "preversion": "npm test",
+    "postversion": "git push && git push --tags && npm publish" 
   },
   "repository": {
     "type": "git",
