@@ -1,24 +1,25 @@
-const request = require('request');
 const { URL } = require('url');
 const { EventEmitter } = require('events');
 
-const wait = time => new Promise(resolve => setTimeout(resolve, time));
+const wait = (time) => new Promise((resolve) => setTimeout(resolve, time));
 
 module.exports = class Crawler extends EventEmitter {
   constructor({
     gap = 0,
     maxConnections = 1,
-    absoluteUrl,
+    baseUrl = undefined,
     handler,
-  }) {
+    request = require('got'),
+  } = {}) {
     super();
     if (typeof handler === 'undefined') throw new Error('Handler is undefined!');
-    this.absoluteUrl = absoluteUrl;
+    this.baseUrl = baseUrl;
     this.gap = gap;
     this.maxConnections = maxConnections;
     this.handler = handler;
     this.urlQueue = [];
     this.running = 0;
+    this.request = request
   }
 
   queue({

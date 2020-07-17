@@ -1,8 +1,9 @@
+/* globals test */
 const Crawler = require('.');
 
-test('crawls Wikipedia (absoluteUrl + maxConnections + callback)', (done) => {
+test('crawls Wikipedia (baseUrl + maxConnections + callback)', (done) => {
   const crawler = new Crawler({
-    absoluteUrl: 'https://hu.wikipedia.org/',
+    baseUrl: 'https://hu.wikipedia.org/',
     maxConnections: 2,
     handler: (err, { body }) => {
       const titleRegex = /<title>(.*?) – Wikipédia<\/title>/;
@@ -31,14 +32,12 @@ test('crawls Wikipedia (absoluteUrl + maxConnections + callback)', (done) => {
   });
 });
 
-test('sends nothing (error)', () => {
-  expect(() => {
-    new Crawler().queue('nah');
-  }).toThrow(/destruct/i);
-});
-
 test('sends no handler (error)', () => {
   expect(() => {
     new Crawler({}).queue('nah');
+  }).toThrow(/Handler/i);
+
+  expect(() => {
+    new Crawler().queue('nah');
   }).toThrow(/Handler/i);
 });
