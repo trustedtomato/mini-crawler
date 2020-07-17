@@ -31,42 +31,6 @@ test('crawls Wikipedia (absoluteUrl + maxConnections + callback)', (done) => {
   });
 });
 
-test('crawls Ultimate-guitar (drain + callback)', (done) => {
-  const artistUrls = [];
-  const artistCrawler = new Crawler({
-    gap: 1000,
-    handler: async (err, { body }) => {
-      if (err) {
-        throw err;
-      }
-      const ugappStorePage = body.match(/UGAPP\.store\.page\s*=\s*(\{.*\});\n\s+/);
-      const page = JSON.parse(ugappStorePage[1]);
-      const urls = page.data.artists.map(({ artist_url: url }) => url);
-      artistUrls.push(...urls);
-      return urls;
-    },
-  });
-
-  artistCrawler.on('drain', () => {
-    expect(artistUrls.length > 0).toBe(true);
-    done();
-  });
-
-  artistCrawler.queue({
-    url: 'https://www.ultimate-guitar.com/bands/a.htm',
-    callback: (result1) => {
-      expect(result1.length).toBeGreaterThan(0);
-      expect(result1).toContain('/artist/a_b_the_sea_28115');
-      artistCrawler.queue({
-        url: 'https://www.ultimate-guitar.com/bands/a10000.htm',
-        callback: (result2) => {
-          expect(result2.length).toBe(0);
-        },
-      });
-    },
-  });
-});
-
 test('sends nothing (error)', () => {
   expect(() => {
     new Crawler().queue('nah');
