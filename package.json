@@ -12,6 +12,9 @@
     "type": "git",
     "url": "git+https://github.com/trustedtomato/mini-crawler.git"
   },
+  "dependencies": {
+    "request": "^2.88.0"
+  },
   "devDependencies": {
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.2.0",
@@ -29,8 +32,5 @@
   "bugs": {
     "url": "https://github.com/trustedtomato/mini-crawler/issues"
   },
-  "homepage": "https://github.com/trustedtomato/mini-crawler#readme",
-  "dependencies": {
-    "request": "^2.88.0"
-  }
+  "homepage": "https://github.com/trustedtomato/mini-crawler#readme"
 }
