@@ -1,71 +1,96 @@
-const { URL } = require('url');
-const { EventEmitter } = require('events');
+const { default: PQueue } = require('p-queue');
+const got = require('got');
+const urlLib = require('url');
 
-const wait = (time) => new Promise((resolve) => setTimeout(resolve, time));
-
-module.exports = class Crawler extends EventEmitter {
-  constructor({
-    gap = 0,
-    maxConnections = 1,
-    baseUrl = undefined,
-    handler,
-    request = require('got'),
-  } = {}) {
-    super();
-    if (typeof handler === 'undefined') throw new Error('Handler is undefined!');
-    this.baseUrl = baseUrl;
-    this.gap = gap;
-    this.maxConnections = maxConnections;
-    this.handler = handler;
-    this.urlQueue = [];
-    this.running = 0;
-    this.request = request
+module.exports = class Crawler {
+  constructor({ pQueueOptions, gotDefaultOptions } = {}) {
+    this.queue = new PQueue(pQueueOptions);
+    this.gotDefaultOptions = gotDefaultOptions;
+    this.visited = [];
+    this.ongoingRequests = [];
   }
 
-  queue({
-    url,
-    params,
-    callback,
-  }) {
-    if (typeof url === 'undefined') throw new Error('Queued URL is undefined!');
-    if (typeof callback !== 'undefined' && typeof callback !== 'function') throw new Error('Callback must be a function!');
-    this.urlQueue.push({
-      url,
-      params,
-      callback,
-    });
-    this.tryQueueShift();
-  }
-
-  tryQueueShift() {
-    if (this.running < this.maxConnections && this.urlQueue.length > 0) {
-      this.running += 1;
-      const { url, params, callback } = this.urlQueue.shift();
-      request(
-        new URL(url, this.absoluteUrl).href,
-        (err, response, body) => {
-          Promise.resolve(
-            this.handler(err, {
-              ...response,
-              params,
-              body,
-            }),
-          ).then(async (result) => {
-            if (callback) {
-              await callback(result);
-            }
-            if (this.gap > 0) {
-              await wait(this.gap);
-            }
-            this.running -= 1;
-            if (this.urlQueue.length === 0 && this.running === 0) {
-              this.emit('drain');
-            } else {
-              this.tryQueueShift();
-            }
-          });
-        },
-      );
+  async crawlNext(next, previousOptions) {
+    if (next === undefined || next === null) {
+      return;
     }
+    if (typeof next === 'string') {
+      // next is: an URL string
+      await this.crawl({
+        ...previousOptions,
+        url: urlLib.resolve(previousOptions.url, next),
+      });
+    } else if (typeof next[Symbol.iterator] === 'function') {
+      // next is: an array of nexts (or something like that)
+      await Promise.all(
+        [...next].map((nextMember) => this.crawlNext(nextMember, previousOptions)),
+      );
+    } else if (typeof next === 'object') {
+      // next is: an options object
+      await this.crawl({
+        ...previousOptions,
+        ...next,
+        url: urlLib.resolve(previousOptions.url, next.url),
+      });
+    }
+  }
+
+  async crawl(options) {
+    if (!options) {
+      throw new Error('No options object present!');
+    }
+    if (!options.callback) {
+      throw new Error('The options object should have a callback property!');
+    }
+    if (!options.url) {
+      throw new Error('The options object should have an url property!');
+    }
+
+    const { gotOptions, callback } = options;
+    const url = urlLib.resolve(options.url, '');
+
+    if (this.visited.includes(url)) {
+      return;
+    }
+    this.visited.push(url);
+
+    this.queue.add(async () => {
+      let request;
+      let body;
+      let err;
+      try {
+        request = got(
+          url,
+          {
+            ...this.gotDefaultOptions,
+            ...gotOptions,
+            isStream: false,
+            resolveBodyOnly: true,
+          },
+        );
+        this.ongoingRequests.push(request);
+        body = await request;
+      } catch (error) {
+        err = error;
+      }
+
+      if (this.ongoingRequests.includes(request)) {
+        this.ongoingRequests.splice(this.ongoingRequests.indexOf(request), 1);
+      }
+
+      if (request.isCanceled) {
+        return;
+      }
+
+      const next = await callback({ err, body, options });
+      this.crawlNext(next, options);
+    });
+  }
+
+  reset() {
+    this.queue.clear();
+    this.ongoingRequests.forEach((ongoingRequest) => {
+      ongoingRequest.cancel();
+    });
   }
 };
