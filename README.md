@@ -4,7 +4,7 @@ A really small crawler.
 ## Example
 See the examples folder.
 There lies a crawler which tries to find Hitler's Wikipedia article
-by navigating from article to article, using the links in the article.
+by navigating from article to article, using the links in them.
 You know, the classic [clicks to Hitler](https://en.wikipedia.org/wiki/Wikipedia:Wiki_Game) game.
 
 To try out the example,
