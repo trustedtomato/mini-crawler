@@ -39,11 +39,11 @@ module.exports = class Crawler {
     if (!options) {
       throw new Error('No options object present!');
     }
-    if (!options.callback) {
-      throw new Error('The options object should have a callback property!');
+    if (typeof options.callback !== 'function') {
+      throw new Error('The options object should have a callback property (function)!');
     }
-    if (!options.url) {
-      throw new Error('The options object should have an url property!');
+    if (typeof options.url !== 'string') {
+      throw new Error('The options object should have an url property (string)!');
     }
 
     const { gotOptions, callback } = options;
