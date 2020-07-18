@@ -1,4 +1,14 @@
 # mini-crawler
 A really small crawler.
 
-## Usage
+## Example
+See the examples folder.
+There lies a crawler which tries to find Hitler's Wikipedia article
+by navigating from article to article, using the links in the article.
+You know, the classic [clicks to Hitler](https://en.wikipedia.org/wiki/Wikipedia:Wiki_Game) game.
+
+To try out the example,
+clone this respository,
+cd into it,
+run `npm install` then `node examples/clicks-to-hitler.js Barack_Obama`.
+(At the time of writing, you can get there with two clicks.)
