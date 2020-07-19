@@ -1,5 +1,5 @@
-/* globals test, expect */
-const Crawler = require('.');
+// @ts-nocheck
+import Crawler from './index'
 
 test('crawls Wikipedia (baseUrl + maxConnections + callback)', (done) => {
   /*
@@ -32,11 +32,11 @@ test('crawls Wikipedia (baseUrl + maxConnections + callback)', (done) => {
     },
   });
   */
-  done();
-});
+  done()
+})
 
 test('sends no handler (error)', () => {
-  expect(new Crawler({}).crawl()).rejects.toThrow(/No options object present/i);
+  expect(new Crawler({}).crawl()).rejects.toThrow(/No options object present/i)
 
-  expect(new Crawler().crawl({})).rejects.toThrow(/callback property/i);
+  expect(new Crawler().crawl({})).rejects.toThrow(/callback property/i)
 });
