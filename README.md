@@ -10,5 +10,5 @@ You know, the classic [clicks to Hitler](https://en.wikipedia.org/wiki/Wikipedia
 To try out the example,
 clone this respository,
 cd into it,
-run `npm install` then `node examples/clicks-to-hitler.js Barack_Obama`.
+run `npm install && npm run build` then `node examples/clicks-to-hitler.js Barack_Obama`.
 (At the time of writing, you can get there with two clicks.)
