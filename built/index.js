@@ -8,7 +8,7 @@ const p_queue_1 = __importDefault(require("p-queue"));
 const got_1 = __importDefault(require("got"));
 const url_1 = __importDefault(require("url"));
 class Crawler {
-    constructor({ pQueueOptions, gotDefaultOptions }) {
+    constructor({ pQueueOptions, gotDefaultOptions } = {}) {
         this.queue = new p_queue_1.default(pQueueOptions);
         this.gotDefaultOptions = gotDefaultOptions;
         this.visited = [];

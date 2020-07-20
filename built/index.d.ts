@@ -2,8 +2,8 @@ import PQueue, { DefaultAddOptions, Options as PQueueOptions } from 'p-queue';
 import PriorityQueue from 'p-queue/dist/priority-queue';
 import { Options as GotOptions, CancelableRequest } from 'got';
 interface CrawlerOptions {
-    pQueueOptions: PQueueOptions<PriorityQueue, DefaultAddOptions>;
-    gotDefaultOptions: GotOptions;
+    pQueueOptions?: PQueueOptions<PriorityQueue, DefaultAddOptions>;
+    gotDefaultOptions?: GotOptions;
 }
 declare type Promisable<T> = T | PromiseLike<T>;
 declare type ResolvedCallbackResult = [ResolvedCallbackResult] | string | PartialCrawlOptions | null | void;
@@ -28,11 +28,11 @@ interface PartialCrawlOptions {
 }
 declare class Crawler {
     queue: PQueue;
-    gotDefaultOptions: GotOptions;
+    gotDefaultOptions?: GotOptions;
     visited: string[];
     ongoingRequests: CancelableRequest[];
-    constructor({ pQueueOptions, gotDefaultOptions }: CrawlerOptions);
-    crawlNext(next: ResolvedCallbackResult, previousOptions: CrawlOptions): Promise<void>;
+    constructor({ pQueueOptions, gotDefaultOptions }?: CrawlerOptions);
+    private crawlNext;
     crawl(options: CrawlOptions): Promise<void>;
     reset(): void;
 }

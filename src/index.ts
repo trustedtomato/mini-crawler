@@ -4,8 +4,8 @@ import got, { Options as GotOptions, CancelableRequest } from 'got'
 import urlLib from 'url'
 
 interface CrawlerOptions {
-  pQueueOptions: PQueueOptions<PriorityQueue, DefaultAddOptions>
-  gotDefaultOptions: GotOptions
+  pQueueOptions?: PQueueOptions<PriorityQueue, DefaultAddOptions>
+  gotDefaultOptions?: GotOptions
 }
 
 type Promisable<T> = T | PromiseLike<T>
@@ -34,18 +34,18 @@ interface PartialCrawlOptions {
 
 class Crawler {
   queue: PQueue
-  gotDefaultOptions: GotOptions
+  gotDefaultOptions?: GotOptions
   visited: string[]
   ongoingRequests: CancelableRequest[]
 
-  constructor({ pQueueOptions, gotDefaultOptions }: CrawlerOptions) {
+  constructor({ pQueueOptions, gotDefaultOptions }: CrawlerOptions = {}) {
     this.queue = new PQueue(pQueueOptions)
     this.gotDefaultOptions = gotDefaultOptions
     this.visited = []
     this.ongoingRequests = []
   }
 
-  async crawlNext(next: ResolvedCallbackResult, previousOptions: CrawlOptions): Promise<void> {
+  private async crawlNext(next: ResolvedCallbackResult, previousOptions: CrawlOptions): Promise<void> {
     if (next === undefined || next === null) {
       return
     }

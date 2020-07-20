@@ -34,7 +34,7 @@ test('crawls Wikipedia (baseUrl + maxConnections + callback)', (done) => {
   done()
 })
 
-test('sends no handler (error)', () => {
+test('throws errors', () => {
   // @ts-ignore: In the following line we are testing errors.
   expect(new Crawler({}).crawl()).rejects.toThrow(/No options object present/i)
 
