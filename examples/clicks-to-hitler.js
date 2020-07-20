@@ -1,14 +1,12 @@
-const Crawler = require('..');
+const { Crawler } = require('..');
 
 const startingWikiPage = process.argv[2] || 'Elmo';
 
 // setup crawler
 const crawler = new Crawler({
-  pQueueOptions: {
-    concurrency: 5,
-    interval: 500,
-    intervalCap: 2,
-  },
+  concurrency: 2,
+  interval: 1000,
+  intervalCap: 2
 });
 
 // utility functions

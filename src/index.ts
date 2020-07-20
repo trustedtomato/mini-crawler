@@ -3,10 +3,11 @@ import PriorityQueue from 'p-queue/dist/priority-queue'
 import got, { Options as GotOptions, CancelableRequest } from 'got'
 import urlLib from 'url'
 
-interface CrawlerOptions {
-  pQueueOptions?: PQueueOptions<PriorityQueue, DefaultAddOptions>
-  gotDefaultOptions?: GotOptions
-}
+/**
+ * The options for the PQueue constructor.
+ * @see {@link https://www.npmjs.com/package/p-queue}
+ */
+type CrawlerOptions = PQueueOptions<PriorityQueue, DefaultAddOptions>
 
 type Promisable<T> = T | PromiseLike<T>
 type ResolvedCallbackResult = [ResolvedCallbackResult] | string | PartialCrawlOptions | null | void
@@ -20,27 +21,56 @@ interface Callback {
   (arg: CallbackArgument): CallbackResult
 }
 
-interface CrawlOptions {
+interface PartialCrawlOptions {
+  /**
+   * The URL to start crawling at.
+   */
   url: string
-  callback: Callback
+  /**
+   * The callback interprets the result of got.
+   * The returned value of the callback will be used to trigger
+   * further crawls. The current CrawlOptions object will be
+   * merged with the returned value. See the [examples](https://github.com/trustedtomato/mini-crawler/tree/master/examples)
+   * or the [source code](https://github.com/trustedtomato/mini-crawler/blob/master/src/index.ts) (crawlNext method)
+   * to understand the merging mechanism.
+   */
+  callback?: Callback
+  /**
+   * Options for got().
+   * @see {@link https://www.npmjs.com/package/got#options}
+   */
   gotOptions?: GotOptions
+  /**
+   * Any arbitary data to send to callback.
+   */
+  data?: any
 }
 
-interface PartialCrawlOptions {
-  url: string
-  callback?: Callback
-  gotOptions?: GotOptions
-}
+type CrawlOptions = PartialCrawlOptions & Required<Pick<PartialCrawlOptions, "callback">>
 
 class Crawler {
+  /**
+   * The PQueue where the crawl requests are waiting.
+   * @see {@link https://www.npmjs.com/package/p-queue}
+  */
   queue: PQueue
-  gotDefaultOptions?: GotOptions
+  /**
+   * The array of visited URL.
+   * If you have already visited an URL,
+   * crawl will immediately return;
+   * else the URL will be added to the array.
+   * Normally you don't need to modify this array.
+   */
   visited: string[]
+  /**
+   * Array of ongoing requests.
+   * These are cancelled when calling the reset method.
+   * Normally you don't need to modify this array.
+   */
   ongoingRequests: CancelableRequest[]
 
-  constructor({ pQueueOptions, gotDefaultOptions }: CrawlerOptions = {}) {
+  constructor(pQueueOptions: CrawlerOptions) {
     this.queue = new PQueue(pQueueOptions)
-    this.gotDefaultOptions = gotDefaultOptions
     this.visited = []
     this.ongoingRequests = []
   }
@@ -97,7 +127,6 @@ class Crawler {
         request = got(
           url,
           {
-            ...this.gotDefaultOptions,
             ...gotOptions,
             isStream: false,
             resolveBodyOnly: true
