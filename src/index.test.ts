@@ -1,4 +1,3 @@
-// @ts-nocheck
 import Crawler from './index'
 
 test('crawls Wikipedia (baseUrl + maxConnections + callback)', (done) => {
@@ -36,7 +35,9 @@ test('crawls Wikipedia (baseUrl + maxConnections + callback)', (done) => {
 })
 
 test('sends no handler (error)', () => {
+  // @ts-ignore: In the following line we are testing errors.
   expect(new Crawler({}).crawl()).rejects.toThrow(/No options object present/i)
 
+  // @ts-ignore: In the following line we are testing errors.
   expect(new Crawler().crawl({})).rejects.toThrow(/callback property/i)
-});
+})

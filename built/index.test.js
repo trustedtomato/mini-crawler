@@ -3,7 +3,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// @ts-nocheck
 const index_1 = __importDefault(require("./index"));
 test('crawls Wikipedia (baseUrl + maxConnections + callback)', (done) => {
     /*
@@ -39,6 +38,8 @@ test('crawls Wikipedia (baseUrl + maxConnections + callback)', (done) => {
     done();
 });
 test('sends no handler (error)', () => {
+    // @ts-ignore: In the following line we are testing errors.
     expect(new index_1.default({}).crawl()).rejects.toThrow(/No options object present/i);
+    // @ts-ignore: In the following line we are testing errors.
     expect(new index_1.default().crawl({})).rejects.toThrow(/callback property/i);
 });

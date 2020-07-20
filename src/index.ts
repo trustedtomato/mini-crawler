@@ -4,7 +4,7 @@ import got, { Options as GotOptions, CancelableRequest } from 'got'
 import urlLib from 'url'
 
 interface CrawlerOptions {
-  pQueueOptions: PQueueOptions<PriorityQueue, DefaultAddOptions>,
+  pQueueOptions: PQueueOptions<PriorityQueue, DefaultAddOptions>
   gotDefaultOptions: GotOptions
 }
 
@@ -27,7 +27,7 @@ interface CrawlOptions {
 }
 
 interface PartialCrawlOptions {
-  url: string;
+  url: string
   callback?: Callback
   gotOptions?: GotOptions
 }
@@ -47,45 +47,45 @@ class Crawler {
 
   async crawlNext(next: ResolvedCallbackResult, previousOptions: CrawlOptions): Promise<void> {
     if (next === undefined || next === null) {
-      return;
+      return
     }
     if (typeof next === 'string') {
       // next is: an URL string
       await this.crawl({
         ...previousOptions,
         url: urlLib.resolve(previousOptions.url, next)
-      });
+      })
     } else if (Array.isArray(next)) {
       // next is: an array of nexts
       await Promise.all(
         next.map((nextMember) => this.crawlNext(nextMember, previousOptions))
-      );
+      )
     } else if (typeof next === 'object') {
       // next is: a PartialCrawlOptions object
       await this.crawl({
         ...previousOptions,
         ...next,
         url: urlLib.resolve(previousOptions.url, next.url)
-      });
+      })
     }
   }
 
   async crawl(options: CrawlOptions): Promise<void> {
     if (!options) {
-      throw new Error('No options object present!');
+      throw new Error('No options object present!')
     }
     if (typeof options.callback !== 'function') {
-      throw new Error('The options object should have a callback property (function)!');
+      throw new Error('The options object should have a callback property (function)!')
     }
     if (typeof options.url !== 'string') {
-      throw new Error('The options object should have an url property (string)!');
+      throw new Error('The options object should have an url property (string)!')
     }
 
     const { gotOptions, callback } = options
     const url = urlLib.resolve(options.url, '')
 
     if (this.visited.includes(url)) {
-      return;
+      return
     }
     this.visited.push(url)
 
@@ -104,29 +104,29 @@ class Crawler {
           }
         ) as CancelableRequest
         this.ongoingRequests.push(request)
-        body = await request;
+        body = await request
       } catch (err) {
-        error = err;
+        error = err
       }
 
       if (request && this.ongoingRequests.includes(request)) {
-        this.ongoingRequests.splice(this.ongoingRequests.indexOf(request), 1);
+        this.ongoingRequests.splice(this.ongoingRequests.indexOf(request), 1)
       }
 
       if (request?.isCanceled) {
-        return;
+        return
       }
 
       const next = await callback({ error, body, options })
-      this.crawlNext(next, options);
-    });
+      this.crawlNext(next, options)
+    })
   }
 
   reset(): void {
     this.queue.clear()
     this.ongoingRequests.forEach((ongoingRequest) => {
-      ongoingRequest.cancel();
-    });
+      ongoingRequest.cancel()
+    })
   }
 }
 
