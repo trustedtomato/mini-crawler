@@ -69,7 +69,7 @@ class Crawler {
    */
   ongoingRequests: CancelableRequest[]
 
-  constructor(pQueueOptions: CrawlerOptions) {
+  constructor(pQueueOptions?: CrawlerOptions) {
     this.queue = new PQueue(pQueueOptions)
     this.visited = []
     this.ongoingRequests = []
