@@ -1,6 +1,9 @@
 # mini-crawler
 A really small crawler.
 
+## Usage
+
+
 ## Example
 See the examples folder.
 There lies a crawler which tries to find Hitler's Wikipedia article

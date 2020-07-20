@@ -1,6 +1,6 @@
 import Crawler from './index'
 
-test('crawls Wikipedia (baseUrl + maxConnections + callback)', (done) => {
+test('test merging mechanism (crawlNext)', (done) => {
   /*
   const crawler = new Crawler({
     baseUrl: 'https://hu.wikipedia.org/',

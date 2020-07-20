@@ -2,6 +2,7 @@ import PQueue, { DefaultAddOptions, Options as PQueueOptions } from 'p-queue'
 import PriorityQueue from 'p-queue/dist/priority-queue'
 import got, { Options as GotOptions, CancelableRequest } from 'got'
 import urlLib from 'url'
+import { resultToCrawlOptionsArray } from './result-to-crawloptions-array'
 
 /**
  * The options for the PQueue constructor.
@@ -10,7 +11,7 @@ import urlLib from 'url'
 type CrawlerOptions = PQueueOptions<PriorityQueue, DefaultAddOptions>
 
 type Promisable<T> = T | PromiseLike<T>
-type ResolvedCallbackResult = [ResolvedCallbackResult] | string | PartialCrawlOptions | null | void
+export type ResolvedCallbackResult = [ResolvedCallbackResult] | string | PartialCrawlOptions | null | void
 type CallbackResult = Promisable<ResolvedCallbackResult>
 interface CallbackArgument {
   error?: Error
@@ -46,7 +47,7 @@ interface PartialCrawlOptions {
   data?: any
 }
 
-type CrawlOptions = PartialCrawlOptions & Required<Pick<PartialCrawlOptions, "callback">>
+export type CrawlOptions = PartialCrawlOptions & Required<Pick<PartialCrawlOptions, "callback">>
 
 class Crawler {
   /**
@@ -75,32 +76,14 @@ class Crawler {
     this.ongoingRequests = []
   }
 
-  private async crawlNext(next: ResolvedCallbackResult, previousOptions: CrawlOptions): Promise<void> {
-    if (next === undefined || next === null) {
-      return
-    }
-    if (typeof next === 'string') {
-      // next is: an URL string
-      await this.crawl({
-        ...previousOptions,
-        url: urlLib.resolve(previousOptions.url, next)
-      })
-    } else if (Array.isArray(next)) {
-      // next is: an array of nexts
-      await Promise.all(
-        next.map((nextMember) => this.crawlNext(nextMember, previousOptions))
-      )
-    } else if (typeof next === 'object') {
-      // next is: a PartialCrawlOptions object
-      await this.crawl({
-        ...previousOptions,
-        ...next,
-        url: urlLib.resolve(previousOptions.url, next.url)
-      })
-    }
+  private crawlNext(result: ResolvedCallbackResult, previousOptions: CrawlOptions): void {
+    const crawlOptionsArray = resultToCrawlOptionsArray(result, previousOptions)
+    crawlOptionsArray.forEach(crawlOptions => {
+      this.crawl(crawlOptions)
+    })
   }
 
-  async crawl(options: CrawlOptions): Promise<void> {
+  crawl(options: CrawlOptions): void {
     if (!options) {
       throw new Error('No options object present!')
     }
