@@ -35,9 +35,13 @@ test('test merging mechanism (crawlNext)', (done) => {
 })
 
 test('throws errors', () => {
-  // @ts-ignore: In the following line we are testing errors.
-  expect(new Crawler({}).crawl()).rejects.toThrow(/No options object present/i)
+  expect(() => {
+    // @ts-ignore: In the following line we are testing errors.
+    new Crawler({}).crawl()
+  }).toThrow(/No options object present/i)
 
-  // @ts-ignore: In the following line we are testing errors.
-  expect(new Crawler().crawl({})).rejects.toThrow(/callback property/i)
+  expect(() => {
+    // @ts-ignore: In the following line we are testing errors.
+    new Crawler().crawl({})
+  }).toThrow(/callback property/i)
 })
