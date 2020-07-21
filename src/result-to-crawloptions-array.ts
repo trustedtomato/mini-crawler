@@ -7,10 +7,7 @@ const resultToCrawlOptionsArray = (result: ResolvedCallbackResult, previousOptio
   }
   if (typeof result === 'string') {
     // next is: an URL string
-    return [{
-      ...previousOptions,
-      url: urlLib.resolve(previousOptions.url, result)
-    }]
+    return resultToCrawlOptionsArray({ url: result }, previousOptions)
   } else if (Array.isArray(result)) {
     // next is: an array of nexts
     return result.flatMap((resultMember) => resultToCrawlOptionsArray(resultMember, previousOptions))
