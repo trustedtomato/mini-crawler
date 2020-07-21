@@ -11,7 +11,7 @@ import { resultToCrawlOptionsArray } from './result-to-crawloptions-array'
 type CrawlerOptions = PQueueOptions<PriorityQueue, DefaultAddOptions>
 
 type Promisable<T> = T | PromiseLike<T>
-export type ResolvedCallbackResult = [ResolvedCallbackResult] | string | PartialCrawlOptions | null | void
+export type ResolvedCallbackResult = ResolvedCallbackResult[] | string | PartialCrawlOptions | null | void
 type CallbackResult = Promisable<ResolvedCallbackResult>
 interface CallbackArgument {
   error?: Error
