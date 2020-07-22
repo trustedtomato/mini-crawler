@@ -5,7 +5,7 @@ A really small crawler.
 
 
 ## API
-For the auto-generated typedoc, see [https://trustedtomato.github.io/mini-crawler/](the project's GitHub Page).
+For the auto-generated typedoc, see [the project's GitHub Page](https://trustedtomato.github.io/mini-crawler/).
 
 ## Example
 See the examples folder.
