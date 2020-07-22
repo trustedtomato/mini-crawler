@@ -15,6 +15,11 @@ test('undefined to empty array', () => {
   expect(resultToCrawlOptionsArray(undefined, previousOptions1)).toEqual([])
 })
 
+test('number to empty array', () => {
+  // @ts-ignore: Sending a number as the argument errors out, but should be tested.
+  expect(resultToCrawlOptionsArray(12, previousOptions1)).toEqual([])
+})
+
 test('string to merged singleton', () => {
   expect(resultToCrawlOptionsArray('https://example.com/next', previousOptions1)).toEqual([{
     callback,
