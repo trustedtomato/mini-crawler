@@ -1,45 +1,13 @@
 import Crawler from './index'
 
-test('test merging mechanism (crawlNext)', (done) => {
-  /*
-  const crawler = new Crawler({
-    baseUrl: 'https://hu.wikipedia.org/',
-    maxConnections: 2,
-    handler: (err, { body }) => {
-      const titleRegex = /<title>(.*?) – Wikipédia<\/title>/;
-      const articleUrlRegex = /href="(\/wiki\/.*?)"/g;
-      const references = [];
-      while ((articleUrlMatch = articleUrlRegex.exec(body)) !== null) {
-        references.push(articleUrlMatch[1]);
-      }
-      return {
-        title: body.match(titleRegex)[1].trim(),
-        references,
-      };
-    },
-  });
-  crawler.queue({
-    url: '/wiki/Csaknekedkisl%C3%A1ny',
-    callback: ({ title, references }) => {
-      expect(title).toBe('Csaknekedkislány');
-      references.slice(0, 4).forEach((reference) => {
-        crawler.queue({ url: reference });
-      });
-      expect(crawler.urlQueue.length).toBe(3);
-      expect(crawler.running).toBe(2);
-      done();
-    },
-  });
-  */
-  done()
-})
+const callback = () => null
 
 test('when crawling a non-visited URL, the URL should be added to visited URLs', () => {
   const crawler = new Crawler()
   crawler.visited.push('https://example.com/')
   crawler.crawl({
     url: 'https://example.com/non-visited-path',
-    callback: () => {}
+    callback
   })
   expect(crawler.queue.size + crawler.queue.pending).toBe(1)
   expect(crawler.visited.length).toBe(2)
@@ -50,7 +18,7 @@ test('crawling a visited URL should return early', () => {
   crawler.visited.push('https://example.com/')
   crawler.crawl({
     url: 'https://example.com',
-    callback: () => {}
+    callback
   })
   expect(crawler.queue.size + crawler.queue.pending).toBe(0)
 })
@@ -61,15 +29,15 @@ test('resetting the crawler should stop it', () => {
   })
   crawler.crawl({
     url: 'https://example.com',
-    callback: () => {}
+    callback
   })
   crawler.crawl({
     url: 'https://example.org',
-    callback: () => {}
+    callback
   })
   crawler.crawl({
     url: 'https://example.com/2',
-    callback: () => {}
+    callback
   })
   crawler.reset()
   expect(crawler.queue.size).toBe(0)
@@ -79,7 +47,7 @@ test('resetting the crawler should stop it', () => {
 })
 
 test('callback\'s result should be used for further calls', done => {
-  const crawler = new Crawler();
+  const crawler = new Crawler()
   crawler.crawl({
     url: 'https://wiki.archlinux.org/',
     callback: ({ body }) => {
@@ -113,7 +81,7 @@ test('throws errors', () => {
   expect(() => {
     // @ts-ignore: In the following line we are testing errors.
     new Crawler().crawl({
-      callback: () => {}
+      callback
     })
   }).toThrow(/url property/i)
 })
