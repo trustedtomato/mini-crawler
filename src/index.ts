@@ -32,7 +32,7 @@ interface PartialCrawlOptions {
    * The returned value of the callback will be used to trigger
    * further crawls. The current CrawlOptions object will be
    * merged with the returned value. See the [examples](https://github.com/trustedtomato/mini-crawler/tree/master/examples)
-   * or the [source code](https://github.com/trustedtomato/mini-crawler/blob/master/src/index.ts) (crawlNext method)
+   * or the [function which converts callback results to an array of crawlOptions](https://github.com/trustedtomato/mini-crawler/blob/master/src/result-to-crawloptions-array.ts)
    * to understand the merging mechanism.
    */
   callback?: Callback
