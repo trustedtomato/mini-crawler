@@ -44,7 +44,7 @@ interface PartialCrawlOptions {
   /**
    * Any arbitary data to send to callback.
    */
-  data?: any
+  data?: unknown
 }
 
 export type CrawlOptions = PartialCrawlOptions & Required<Pick<PartialCrawlOptions, "callback">>
