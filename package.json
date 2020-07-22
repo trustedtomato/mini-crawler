@@ -6,6 +6,7 @@
   "types": "./built/index.d.ts",
   "scripts": {
     "build": "tsc",
+    "docs": "typedoc --exclude \"**/*.test.*\"",
     "test": "npm run build && jest --coverage",
     "preversion": "npm test",
     "postversion": "git push && git push --tags && npm publish"
@@ -29,6 +30,7 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
     "jest": "^26.1.0",
+    "typedoc": "^0.17.8",
     "typescript": "^3.9.7"
   },
   "keywords": [
