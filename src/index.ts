@@ -76,15 +76,8 @@ class Crawler {
     this.ongoingRequests = []
   }
 
-  private crawlNext(result: ResolvedCallbackResult, previousOptions: CrawlOptions): void {
-    const crawlOptionsArray = resultToCrawlOptionsArray(result, previousOptions)
-    crawlOptionsArray.forEach(crawlOptions => {
-      this.crawl(crawlOptions)
-    })
-  }
-
   crawl(options: CrawlOptions): void {
-    if (!options) {
+    if (options === null || typeof options !== 'object') {
       throw new Error('No options object present!')
     }
     if (typeof options.callback !== 'function') {
@@ -129,8 +122,12 @@ class Crawler {
         return
       }
 
-      const next = await callback({ error, body, options })
-      this.crawlNext(next, options)
+      const result = await callback({ error, body, options })
+      
+      const crawlOptionsArray = resultToCrawlOptionsArray(result, options)
+      crawlOptionsArray.forEach(crawlOptions => {
+        this.crawl(crawlOptions)
+      })
     })
   }
 
