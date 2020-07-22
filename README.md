@@ -4,6 +4,9 @@ A really small crawler.
 ## Usage
 
 
+## API
+For the auto-generated typedoc, see [https://trustedtomato.github.io/mini-crawler/](the project's GitHub Page).
+
 ## Example
 See the examples folder.
 There lies a crawler which tries to find Hitler's Wikipedia article
