@@ -22,6 +22,8 @@
         "semi": ["error", "never"],
         "no-extra-semi": "error",
         "semi-style": ["error", "first"],
-        "ts-expect-error": "allow-with-description"
+        "@typescript-eslint/ban-ts-comment": ["error", {
+            "ts-ignore": "allow-with-description"
+        }]
     }
 }
