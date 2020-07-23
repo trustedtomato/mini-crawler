@@ -54,7 +54,7 @@ crawler.crawl({
 ```
 
 Output:
-```
+```text
 Fetched https://www.google.com/search?q=Tame+Impala!
 Found 145 new URLs!
 Fetched https://www.google.com/?sa=X&ved=0ahUKEwiM39zjjuHqAhUUdCsKHf7xAX8QOwgC!
