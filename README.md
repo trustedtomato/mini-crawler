@@ -17,7 +17,7 @@ crawler.crawl({
       'Accept-Language': 'en-US'
     }
   },
-  callback: ({ err, body, options: { url }}) => {
+  callback: (err, { body, options: { url } }) => {
     if (err) {
       console.error(`Error occured at ${url}!`)
       return
