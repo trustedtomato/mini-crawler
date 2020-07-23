@@ -13,6 +13,11 @@ type Promisable<T> = T | PromiseLike<T>
 export type ResolvedCallbackResult = ResolvedCallbackResult[] | string | PartialCrawlOptions | null | void
 type CallbackResult = Promisable<ResolvedCallbackResult>
 interface CallbackArgument {
+  /** The body which got has resolved.
+   * If an error has occured, will be undefined,
+   * else it'll be a string, except if you've changed
+   * the responseType in got's options.
+   */
   body?: unknown
   options: CrawlOptions
 }
