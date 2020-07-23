@@ -57,7 +57,7 @@ Found 59 new URLs!
 ```
 
 ## API
-For the auto-generated typedoc, see [the project's GitHub Page](https://trustedtomato.github.io/mini-crawler/).
+For the auto-generated typedoc, see the [project's GitHub Page](https://trustedtomato.github.io/mini-crawler/).
 
 ## Example
 See the examples folder.
