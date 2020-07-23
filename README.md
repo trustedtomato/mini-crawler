@@ -53,16 +53,6 @@ Fetched https://www.google.com/advanced_search!
 Found 22 new URLs!
 Fetched https://www.google.com/search?q=Tame+Impala&ie=UTF-8&source=lnms&tbm=isch&sa=X&ved=0ahUKEwiM39zjjuHqAhUUdCsKHf7xAX8Q_AUICSgC!
 Found 59 new URLs!
-Fetched https://www.google.com/search?q=Tame+Impala&ie=UTF-8&source=lnms&tbm=shop&sa=X&ved=0ahUKEwiM39zjjuHqAhUUdCsKHf7xAX8Q_AUIDCgF!
-Found 49 new URLs!
-Fetched https://www.google.com/search?q=Tame+Impala&ie=UTF-8&source=lnt&tbs=qdr:h&sa=X&ved=0ahUKEwiM39zjjuHqAhUUdCsKHf7xAX8QpwUIEQ!
-Found 32 new URLs!
-Fetched https://maps.google.com/maps?q=Tame+Impala&um=1&ie=UTF-8&sa=X&ved=0ahUKEwiM39zjjuHqAhUUdCsKHf7xAX8Q_AUICygE!
-Found 4 new URLs!
-Fetched https://www.google.com/search?q=Tame+Impala&ie=UTF-8&source=lnms&tbm=vid&sa=X&ved=0ahUKEwiM39zjjuHqAhUUdCsKHf7xAX8Q_AUICCgB!
-Found 56 new URLs!
-Fetched https://www.google.com/search?q=Tame+Impala&ie=UTF-8&gbv=1&sei=QlMYX4y2NZTorQH-44f4Bw!
-Found 140 new URLs!
 …
 ```
 
