@@ -1,6 +1,6 @@
 {
   "name": "mini-crawler",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "A really small crawler.",
   "main": "./built/index.js",
   "types": "./built/index.d.ts",
