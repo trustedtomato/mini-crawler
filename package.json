@@ -8,7 +8,7 @@
     "build": "tsc",
     "docs": "typedoc --exclude \"**/*.test.*\"",
     "test": "npm run build && jest --coverage",
-    "preversion": "npm test",
+    "preversion": "npm test && npm run docs",
     "postversion": "git push && git push --tags && npm publish"
   },
   "repository": {
