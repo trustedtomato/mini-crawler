@@ -31,6 +31,7 @@
     "eslint-plugin-standard": "^4.0.1",
     "jest": "^26.1.0",
     "typedoc": "^0.17.8",
+    "typedoc-plugin-nojekyll": "^1.0.1",
     "typescript": "^3.9.7"
   },
   "keywords": [
