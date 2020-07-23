@@ -1,6 +1,11 @@
 # mini-crawler
 A really small crawler.
 
+## Installation
+```
+npm install mini-crawler
+```
+
 ## Usage
 ```javascript
 const { Crawler } = require('..')
