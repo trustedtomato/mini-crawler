@@ -67,25 +67,36 @@
 				<a href="#mini-crawler" id="mini-crawler" style="color: inherit; text-decoration: none;">
 					<h1>mini-crawler</h1>
 				</a>
-				<p>A really small crawler.</p>
+				<p>A really small crawler based on <a href="https://www.npmjs.com/package/p-queue">p-queue</a>
+				and <a href="https://www.npmjs.com/package/got">got</a>.</p>
+				<a href="#installation" id="installation" style="color: inherit; text-decoration: none;">
+					<h2>Installation</h2>
+				</a>
+				<pre><code>npm <span class="hljs-keyword">install</span> mini-crawler</code></pre>
 				<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
 					<h2>Usage</h2>
 				</a>
 				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> { Crawler } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;..&#x27;</span>)
 <span class="hljs-keyword">const</span> crawler = <span class="hljs-keyword">new</span> Crawler({
+  <span class="hljs-comment">// All of p-queue options are accepted,</span>
+  <span class="hljs-comment">// see https://www.npmjs.com/package/p-queue#options.</span>
   <span class="hljs-attr">concurrency</span>: <span class="hljs-number">10</span>,
   <span class="hljs-attr">interval</span>: <span class="hljs-number">1000</span>,
   <span class="hljs-attr">intervalCap</span>: <span class="hljs-number">500</span>
 })
 
 crawler.crawl({
+  <span class="hljs-comment">// The crawling will begin at this URL.</span>
   <span class="hljs-attr">url</span>: <span class="hljs-string">&#x27;https://www.google.com/search?q=Tame+Impala&#x27;</span>,
+  <span class="hljs-comment">// All of got&#x27;s options are accepted,</span>
+  <span class="hljs-comment">// except isStream and resolveBodyOnly.</span>
+  <span class="hljs-comment">// See https://www.npmjs.com/package/got#options.</span>
   <span class="hljs-attr">gotOptions</span>: {
     <span class="hljs-attr">headers</span>: {
       <span class="hljs-string">&#x27;Accept-Language&#x27;</span>: <span class="hljs-string">&#x27;en-US&#x27;</span>
     }
   },
-  <span class="hljs-attr">callback</span>: <span class="hljs-function">(<span class="hljs-params">{ err, body, options: { url }}</span>) =&gt;</span> {
+  <span class="hljs-attr">callback</span>: <span class="hljs-function">(<span class="hljs-params">err, { body, options: { url } }</span>) =&gt;</span> {
     <span class="hljs-keyword">if</span> (err) {
       <span class="hljs-built_in">console</span>.error(<span class="hljs-string">`Error occured at <span class="hljs-subst">${url}</span>!`</span>)
       <span class="hljs-keyword">return</span>
@@ -99,39 +110,34 @@ crawler.crawl({
       )
     <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Found <span class="hljs-subst">${urls.length}</span> new URLs!`</span>)
 
+    <span class="hljs-comment">// The returned value will be used for further crawls.</span>
+    <span class="hljs-comment">// It will be transformed into a CrawlOptions array,</span>
+    <span class="hljs-comment">// then crawl() will be called for all of the array&#x27;s items.</span>
+    <span class="hljs-comment">// To understand the transforming mechanism,</span>
+    <span class="hljs-comment">// see https://github.com/trustedtomato/mini-crawler/blob/master/src/result-to-crawloptions-array.ts</span>
     <span class="hljs-keyword">return</span> urls
   }
 })</code></pre>
 				<p>Output:</p>
-				<pre><code>Fetched http<span class="hljs-variable">s:</span>//www.google.<span class="hljs-keyword">com</span>/<span class="hljs-built_in">search</span>?q=Tame+Impala!
-Found <span class="hljs-number">145</span> <span class="hljs-keyword">new</span> URLs!
-Fetched http<span class="hljs-variable">s:</span>//www.google.<span class="hljs-keyword">com</span>/?<span class="hljs-keyword">sa</span>=<span class="hljs-keyword">X</span>&amp;ved=<span class="hljs-number">0</span>ahUKEwiM39zjjuHqAhUUdCsKHf7xAX8QOwgC!
-Found <span class="hljs-number">19</span> <span class="hljs-keyword">new</span> URLs!
-Fetched http<span class="hljs-variable">s:</span>//www.google.<span class="hljs-keyword">com</span>/?output=<span class="hljs-built_in">search</span>&amp;ie=UTF-<span class="hljs-number">8</span>&amp;<span class="hljs-keyword">sa</span>=<span class="hljs-keyword">X</span>&amp;ved=<span class="hljs-number">0</span>ahUKEwiM39zjjuHqAhUUdCsKHf7xAX8QPAgE!
-Found <span class="hljs-number">19</span> <span class="hljs-keyword">new</span> URLs!
-Fetched http<span class="hljs-variable">s:</span>//www.google.<span class="hljs-keyword">com</span>/advanced_search!
-Found <span class="hljs-number">22</span> <span class="hljs-keyword">new</span> URLs!
-Fetched http<span class="hljs-variable">s:</span>//www.google.<span class="hljs-keyword">com</span>/<span class="hljs-built_in">search</span>?q=Tame+Impala&amp;ie=UTF-<span class="hljs-number">8</span>&amp;<span class="hljs-keyword">source</span>=lnms&amp;tbm=isch&amp;<span class="hljs-keyword">sa</span>=<span class="hljs-keyword">X</span>&amp;ved=<span class="hljs-number">0</span>ahUKEwiM39zjjuHqAhUUdCsKHf7xAX8Q_AUICSgC!
-Found <span class="hljs-number">59</span> <span class="hljs-keyword">new</span> URLs!
-Fetched http<span class="hljs-variable">s:</span>//www.google.<span class="hljs-keyword">com</span>/<span class="hljs-built_in">search</span>?q=Tame+Impala&amp;ie=UTF-<span class="hljs-number">8</span>&amp;<span class="hljs-keyword">source</span>=lnms&amp;tbm=shop&amp;<span class="hljs-keyword">sa</span>=<span class="hljs-keyword">X</span>&amp;ved=<span class="hljs-number">0</span>ahUKEwiM39zjjuHqAhUUdCsKHf7xAX8Q_AUIDCgF!
-Found <span class="hljs-number">49</span> <span class="hljs-keyword">new</span> URLs!
-Fetched http<span class="hljs-variable">s:</span>//www.google.<span class="hljs-keyword">com</span>/<span class="hljs-built_in">search</span>?q=Tame+Impala&amp;ie=UTF-<span class="hljs-number">8</span>&amp;<span class="hljs-keyword">source</span>=lnt&amp;tbs=qdr:h&amp;<span class="hljs-keyword">sa</span>=<span class="hljs-keyword">X</span>&amp;ved=<span class="hljs-number">0</span>ahUKEwiM39zjjuHqAhUUdCsKHf7xAX8QpwUIEQ!
-Found <span class="hljs-number">32</span> <span class="hljs-keyword">new</span> URLs!
-Fetched http<span class="hljs-variable">s:</span>//maps.google.<span class="hljs-keyword">com</span>/maps?q=Tame+Impala&amp;um=<span class="hljs-number">1</span>&amp;ie=UTF-<span class="hljs-number">8</span>&amp;<span class="hljs-keyword">sa</span>=<span class="hljs-keyword">X</span>&amp;ved=<span class="hljs-number">0</span>ahUKEwiM39zjjuHqAhUUdCsKHf7xAX8Q_AUICygE!
-Found <span class="hljs-number">4</span> <span class="hljs-keyword">new</span> URLs!
-Fetched http<span class="hljs-variable">s:</span>//www.google.<span class="hljs-keyword">com</span>/<span class="hljs-built_in">search</span>?q=Tame+Impala&amp;ie=UTF-<span class="hljs-number">8</span>&amp;<span class="hljs-keyword">source</span>=lnms&amp;tbm=vid&amp;<span class="hljs-keyword">sa</span>=<span class="hljs-keyword">X</span>&amp;ved=<span class="hljs-number">0</span>ahUKEwiM39zjjuHqAhUUdCsKHf7xAX8Q_AUICCgB!
-Found <span class="hljs-number">56</span> <span class="hljs-keyword">new</span> URLs!
-Fetched http<span class="hljs-variable">s:</span>//www.google.<span class="hljs-keyword">com</span>/<span class="hljs-built_in">search</span>?q=Tame+Impala&amp;ie=UTF-<span class="hljs-number">8</span>&amp;gbv=<span class="hljs-number">1</span>&amp;sei=QlMYX4y2NZTorQH-<span class="hljs-number">44</span>f4Bw!
-Found <span class="hljs-number">140</span> <span class="hljs-keyword">new</span> URLs!
+				<pre><code class="language-text">Fetched https://www.google.com/search?q=Tame+Impala!
+Found 145 new URLs!
+Fetched https://www.google.com/?sa=X&amp;ved=0ahUKEwiM39zjjuHqAhUUdCsKHf7xAX8QOwgC!
+Found 19 new URLs!
+Fetched https://www.google.com/?output=search&amp;ie=UTF-8&amp;sa=X&amp;ved=0ahUKEwiM39zjjuHqAhUUdCsKHf7xAX8QPAgE!
+Found 19 new URLs!
+Fetched https://www.google.com/advanced_search!
+Found 22 new URLs!
+Fetched https://www.google.com/search?q=Tame+Impala&amp;ie=UTF-8&amp;source=lnms&amp;tbm=isch&amp;sa=X&amp;ved=0ahUKEwiM39zjjuHqAhUUdCsKHf7xAX8Q_AUICSgC!
+Found 59 new URLs!
 …</code></pre>
 				<a href="#api" id="api" style="color: inherit; text-decoration: none;">
 					<h2>API</h2>
 				</a>
-				<p>For the auto-generated typedoc, see <a href="https://trustedtomato.github.io/mini-crawler/">the project&#39;s GitHub Page</a>.</p>
-				<a href="#example" id="example" style="color: inherit; text-decoration: none;">
-					<h2>Example</h2>
+				<p>For the auto-generated typedoc, see the <a href="https://trustedtomato.github.io/mini-crawler/">project&#39;s GitHub Page</a>.</p>
+				<a href="#examples" id="examples" style="color: inherit; text-decoration: none;">
+					<h2>Examples</h2>
 				</a>
-				<p>See the examples folder.
+				<p>See the <a href="https://github.com/trustedtomato/mini-crawler/tree/master/examples">examples</a> folder.
 					There lies a crawler which tries to find Hitler&#39;s Wikipedia article
 					by navigating from article to article, using the links in them.
 				You know, the classic <a href="https://en.wikipedia.org/wiki/Wikipedia:Wiki_Game">clicks to Hitler</a> game.</p>
