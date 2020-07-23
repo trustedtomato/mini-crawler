@@ -4,7 +4,7 @@
         "node": true
     },
     "extends": [
-        "eslint:recommended",
+        "standard",
         "plugin:@typescript-eslint/recommended"
     ],
     "parser": "@typescript-eslint/parser",
@@ -16,12 +16,6 @@
         "@typescript-eslint"
     ],
     "rules": {
-        "comma-style": "error",
-        "comma-spacing": "error",
-        "comma-dangle": ["error", "never"],
-        "semi": ["error", "never"],
-        "no-extra-semi": "error",
-        "semi-style": ["error", "first"],
         "@typescript-eslint/ban-ts-comment": ["error", {
             "ts-ignore": "allow-with-description"
         }]

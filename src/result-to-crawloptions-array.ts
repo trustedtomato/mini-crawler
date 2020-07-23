@@ -1,5 +1,4 @@
 import { ResolvedCallbackResult, CrawlOptions } from './index'
-import urlLib from 'url'
 
 const resultToCrawlOptionsArray = (result: ResolvedCallbackResult, previousOptions: CrawlOptions): CrawlOptions[] => {
   if (result === undefined || result === null) {
@@ -16,7 +15,7 @@ const resultToCrawlOptionsArray = (result: ResolvedCallbackResult, previousOptio
     return [{
       ...previousOptions,
       ...result,
-      url: urlLib.resolve(previousOptions.url, result.url)
+      url: new URL(result.url, previousOptions.url).href
     }]
   }
   return []

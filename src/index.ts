@@ -1,7 +1,6 @@
 import PQueue, { DefaultAddOptions, Options as PQueueOptions } from 'p-queue'
 import PriorityQueue from 'p-queue/dist/priority-queue'
 import got, { Options as GotOptions, CancelableRequest } from 'got'
-import urlLib from 'url'
 import { resultToCrawlOptionsArray } from './result-to-crawloptions-array'
 
 /**
@@ -14,12 +13,11 @@ type Promisable<T> = T | PromiseLike<T>
 export type ResolvedCallbackResult = ResolvedCallbackResult[] | string | PartialCrawlOptions | null | void
 type CallbackResult = Promisable<ResolvedCallbackResult>
 interface CallbackArgument {
-  error?: Error
   body?: unknown
   options: CrawlOptions
 }
 interface Callback {
-  (arg: CallbackArgument): CallbackResult
+  (error: Error | undefined, arg: CallbackArgument): CallbackResult
 }
 
 interface PartialCrawlOptions {
@@ -47,7 +45,7 @@ interface PartialCrawlOptions {
   data?: unknown
 }
 
-export type CrawlOptions = PartialCrawlOptions & Required<Pick<PartialCrawlOptions, "callback">>
+export type CrawlOptions = PartialCrawlOptions & Required<Pick<PartialCrawlOptions, 'callback'>>
 
 class Crawler {
   /**
@@ -70,13 +68,13 @@ class Crawler {
    */
   ongoingRequests: CancelableRequest[]
 
-  constructor(pQueueOptions?: CrawlerOptions) {
+  constructor (pQueueOptions?: CrawlerOptions) {
     this.queue = new PQueue(pQueueOptions)
     this.visited = []
     this.ongoingRequests = []
   }
 
-  crawl(options: CrawlOptions): void {
+  crawl (options: CrawlOptions): void {
     if (options === null || typeof options !== 'object') {
       throw new Error('No options object present!')
     }
@@ -88,7 +86,7 @@ class Crawler {
     }
 
     const { gotOptions, callback } = options
-    const url = urlLib.resolve(options.url, '')
+    const url = new URL(options.url).href
 
     if (this.visited.includes(url)) {
       return
@@ -122,8 +120,8 @@ class Crawler {
         return
       }
 
-      const result = await callback({ error, body, options })
-      
+      const result = await callback(error, { body, options })
+
       const crawlOptionsArray = resultToCrawlOptionsArray(result, options)
       crawlOptionsArray.forEach(crawlOptions => {
         this.crawl(crawlOptions)
@@ -131,7 +129,7 @@ class Crawler {
     })
   }
 
-  reset(): void {
+  reset (): void {
     this.queue.clear()
     this.ongoingRequests.forEach((ongoingRequest) => {
       ongoingRequest.cancel()

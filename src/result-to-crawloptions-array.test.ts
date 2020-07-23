@@ -1,7 +1,7 @@
-import { resultToCrawlOptionsArray } from './result-to-crawloptions-array';
-import { CrawlOptions } from '.';
+import { resultToCrawlOptionsArray } from './result-to-crawloptions-array'
+import { CrawlOptions } from '.'
 
-const callback = () => {};
+const callback = () => null
 
 const previousOptions1: CrawlOptions = {
   callback,

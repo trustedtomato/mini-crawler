@@ -50,7 +50,7 @@ test('callback\'s result should be used for further calls', done => {
   const crawler = new Crawler()
   crawler.crawl({
     url: 'https://wiki.archlinux.org/',
-    callback: ({ body }) => {
+    callback: (_, { body }) => {
       const newCallback = () => {
         expect(crawler.queue.size + crawler.queue.pending).toBe(3)
         crawler.reset()
